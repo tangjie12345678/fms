@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.RoleRefPermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.RoleRefPermission" >
+    <id column="RecordID" property="recordID" jdbcType="INTEGER" />
+    <result column="RoleID" property="roleID" jdbcType="INTEGER" />
+    <result column="PermissionID" property="permissionID" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, RoleID, PermissionID
+  </sql>
+
+  <select id="selectByRoleID" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from rolerefpermission
+    where RoleID = #{roleID,jdbcType=INTEGER}
+    order by RoleID,PermissionID;
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rolerefpermission
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rolerefpermission
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByRoleIDPermissionID" >
+    delete from rolerefpermission
+    where RoleID = #{roleID,jdbcType=INTEGER} and PermissionID = #{permissionID,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.esc.fms.entity.RoleRefPermission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into rolerefpermission (RoleID, PermissionID)
+    values (#{roleID,jdbcType=INTEGER}, #{permissionID,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.RoleRefPermission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into rolerefpermission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleID != null" >
+        RoleID,
+      </if>
+      <if test="permissionID != null" >
+        PermissionID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleID != null" >
+        #{roleID,jdbcType=INTEGER},
+      </if>
+      <if test="permissionID != null" >
+        #{permissionID,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.RoleRefPermission" >
+    update rolerefpermission
+    <set >
+      <if test="roleID != null" >
+        RoleID = #{roleID,jdbcType=INTEGER},
+      </if>
+      <if test="permissionID != null" >
+        PermissionID = #{permissionID,jdbcType=INTEGER},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.RoleRefPermission" >
+    update rolerefpermission
+    set RoleID = #{roleID,jdbcType=INTEGER},
+      PermissionID = #{permissionID,jdbcType=INTEGER}
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+</mapper>

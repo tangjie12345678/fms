@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.DepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.Department" >
+    <id column="DeptID" property="deptID" jdbcType="INTEGER" />
+    <result column="ParentID" property="parentID" jdbcType="INTEGER" />
+    <result column="DeptName" property="deptName" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="isLeaf" property="isLeaf" jdbcType="BIT" />
+    <result column="isEnabled" property="isEnabled" jdbcType="BIT" />
+    <result column="SortNo" property="sortNo" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DeptID, ParentID, DeptName, Description, isLeaf, isEnabled, SortNo
+  </sql>
+
+  <select id="getTopDeptInfo" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from department
+    where ParentID is null and isEnabled=1;
+  </select>
+
+  <select id="selectByParentID" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from department
+    where ParentID = #{parentID,jdbcType=INTEGER} and isEnabled=1
+    order by SortNo
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where DeptID = #{deptID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from department
+    where DeptID = #{deptID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteDepartment" parameterType="java.lang.Integer" >
+    update Department
+    set isEnabled = FALSE
+    where DeptID = #{deptID,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.esc.fms.entity.Department" >
+    <selectKey resultType="java.lang.Integer" keyProperty="deptID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into department (ParentID, DeptName, Description, 
+      isLeaf, isEnabled, SortNo)
+    values (#{parentID,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{isLeaf,jdbcType=BIT}, #{isEnabled,jdbcType=BIT}, #{sortNo,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.Department" >
+    <selectKey resultType="java.lang.Integer" keyProperty="deptID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="parentID != null" >
+        ParentID,
+      </if>
+      <if test="deptName != null" >
+        DeptName,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+      <if test="isLeaf != null" >
+        isLeaf,
+      </if>
+      <if test="isEnabled != null" >
+        isEnabled,
+      </if>
+      <if test="sortNo != null" >
+        SortNo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="parentID != null" >
+        #{parentID,jdbcType=INTEGER},
+      </if>
+      <if test="deptName != null" >
+        #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isLeaf != null" >
+        #{isLeaf,jdbcType=BIT},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.Department" >
+    update department
+    <set >
+      <if test="parentID != null" >
+        ParentID = #{parentID,jdbcType=INTEGER},
+      </if>
+      <if test="deptName != null" >
+        DeptName = #{deptName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isLeaf != null" >
+        isLeaf = #{isLeaf,jdbcType=BIT},
+      </if>
+      <if test="isEnabled != null" >
+        isEnabled = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="sortNo != null" >
+        SortNo = #{sortNo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where DeptID = #{deptID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.Department" >
+    update department
+    set ParentID = #{parentID,jdbcType=INTEGER},
+      DeptName = #{deptName,jdbcType=VARCHAR},
+      Description = #{description,jdbcType=VARCHAR},
+      isLeaf = #{isLeaf,jdbcType=BIT},
+      isEnabled = #{isEnabled,jdbcType=BIT},
+      SortNo = #{sortNo,jdbcType=INTEGER}
+    where DeptID = #{deptID,jdbcType=INTEGER}
+  </update>
+</mapper>

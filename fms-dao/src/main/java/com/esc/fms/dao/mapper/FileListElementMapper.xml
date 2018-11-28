@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.FileListElementMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.FileListElement" >
+    <result column="FileID" property="fileID" jdbcType="INTEGER" />
+    <result column="FileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="FileExtType" property="fileExtType" jdbcType="VARCHAR" />
+    <result column="MimeType" property="mimeType" jdbcType="VARCHAR" />
+    <result column="FileSize" property="fileSize" jdbcType="BIGINT" />
+    <result column="FileTypeID" property="fileTypeID" jdbcType="INTEGER" />
+    <result column="FileTypeName" property="fileTypeName" jdbcType="VARCHAR" />
+    <result column="folderName" property="folderName" jdbcType="VARCHAR" />
+    <result column="FilePath" property="filePath" jdbcType="VARCHAR" />
+    <result column="ShareType" property="shareType" jdbcType="VARCHAR" />
+    <result column="ShareTypeName" property="shareTypeName" jdbcType="VARCHAR" />
+    <result column="Creator" property="creator" jdbcType="INTEGER" />
+    <result column="CreatorName" property="creatorName" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createTime" jdbcType="VARCHAR" />
+    <result column="LastUpdator" property="lastUpdator" jdbcType="INTEGER" />
+    <result column="UpdatorName" property="updatorName" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getFileListByConditions" resultMap="BaseResultMap">
+      select sf.FileID,sf.FileName,sf.FileExtType,sf.MimeType,sf.FileSize,sf.FileTypeID,ft.FileTypeName,sf.folderName,sf.FilePath,
+      sf.ShareType,d.Description as ShareTypeName,sf.Creator,stf1.StaffName as CreatorName,DATE_FORMAT(sf.CreateTime,'%Y-%m-%d') as CreateTime,
+      sf.LastUpdator,stf2.StaffName as UpdatorName, DATE_FORMAT(sf.UpdateTime,'%Y-%m-%d') as UpdateTime
+      from sharedfile sf left outer join `user` u1 on sf.Creator = u1.UserID
+      LEFT OUTER JOIN staff stf1 on u1.StaffRecordID = stf1.StaffRecordID
+      LEFT OUTER JOIN `user` u2 on sf.LastUpdator = u2.UserID
+      LEFT OUTER JOIN staff stf2 on u2.StaffRecordID = stf2.StaffRecordID,
+      filetype ft, dictionary d
+      where sf.FileTypeID = ft.FileTypeID and sf.ShareType = d.DictCode
+    <if test="fileName != null and fileName !=''" >
+      and sf.FileName like CONCAT('%',#{fileName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="fileType != null  and fileType !=''" >
+      and sf.FileTypeID = #{fileType,jdbcType=INTEGER}
+    </if>
+    <if test="folderName != null and folderName !=''" >
+      and sf.folderName like CONCAT('%',#{folderName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="creator != null and creator !=''" >
+      and stf1.StaffName like CONCAT('%',#{creator,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="updator != null and updator !=''" >
+      and stf2.StaffName like CONCAT('%',#{updator,jdbcType=VARCHAR},'%')
+    </if>
+    order by sf.CreateTime DESC
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="getCountByConditions" resultType="java.lang.Integer">
+    select count(*)
+    from sharedfile sf left outer join `user` u1 on sf.Creator = u1.UserID
+    LEFT OUTER JOIN staff stf1 on u1.StaffRecordID = stf1.StaffRecordID
+    LEFT OUTER JOIN `user` u2 on sf.LastUpdator = u2.UserID
+    LEFT OUTER JOIN staff stf2 on u2.StaffRecordID = stf2.StaffRecordID,
+    filetype ft, dictionary d
+    where sf.FileTypeID = ft.FileTypeID and sf.ShareType = d.DictCode
+    <if test="fileName != null and fileName !=''" >
+      and sf.FileName like CONCAT('%',#{fileName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="fileType != null  and fileType !=''" >
+      and sf.FileTypeID = #{fileType,jdbcType=INTEGER}
+    </if>
+    <if test="folderName != null and folderName !=''" >
+      and sf.folderName like CONCAT('%',#{folderName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="creator != null and creator !=''" >
+      and s1.StaffName like CONCAT('%',#{creator,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="updator != null and updator !=''" >
+      and s2.StaffName like CONCAT('%',#{updator,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+</mapper>

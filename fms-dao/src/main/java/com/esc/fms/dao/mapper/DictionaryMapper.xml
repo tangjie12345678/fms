@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.DictionaryMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.Dictionary" >
+    <id column="DictCode" property="dictCode" jdbcType="CHAR" />
+    <result column="DictType" property="dictType" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DictCode, DictType, Description
+  </sql>
+
+  <select id="selectByDictType" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select
+      <include refid="Base_Column_List" />
+      from dictionary
+      where DictType = #{dictType,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

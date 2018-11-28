@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.SharedFileMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.SharedFile" >
+    <id column="FileID" property="fileID" jdbcType="INTEGER" />
+    <result column="FileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="FileExtType" property="fileExtType" jdbcType="VARCHAR" />
+    <result column="MimeType" property="mimeType" jdbcType="VARCHAR" />
+    <result column="FileSize" property="fileSize" jdbcType="BIGINT" />
+    <result column="FileTypeID" property="fileTypeID" jdbcType="INTEGER" />
+    <result column="folderName" property="folderName" jdbcType="VARCHAR" />
+    <result column="FilePath" property="filePath" jdbcType="VARCHAR" />
+    <result column="ShareType" property="shareType" jdbcType="CHAR" />
+    <result column="Creator" property="creator" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="LastUpdator" property="lastUpdator" jdbcType="INTEGER" />
+    <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FileID, FileName, FileExtType, MimeType, FileSize, FileTypeID, folderName, FilePath, 
+    ShareType, Creator, CreateTime, LastUpdator, UpdateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sharedfile
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sharedfile
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.SharedFile" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fileID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sharedfile (FileName, FileExtType, MimeType, 
+      FileSize, FileTypeID, folderName, 
+      FilePath, ShareType, Creator, 
+      CreateTime, LastUpdator, UpdateTime
+      )
+    values (#{fileName,jdbcType=VARCHAR}, #{fileExtType,jdbcType=VARCHAR}, #{mimeType,jdbcType=VARCHAR}, 
+      #{fileSize,jdbcType=BIGINT}, #{fileTypeID,jdbcType=INTEGER}, #{folderName,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR}, #{shareType,jdbcType=CHAR}, #{creator,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{lastUpdator,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.SharedFile" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fileID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sharedfile
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileName != null" >
+        FileName,
+      </if>
+      <if test="fileExtType != null" >
+        FileExtType,
+      </if>
+      <if test="mimeType != null" >
+        MimeType,
+      </if>
+      <if test="fileSize != null" >
+        FileSize,
+      </if>
+      <if test="fileTypeID != null" >
+        FileTypeID,
+      </if>
+      <if test="folderName != null" >
+        folderName,
+      </if>
+      <if test="filePath != null" >
+        FilePath,
+      </if>
+      <if test="shareType != null" >
+        ShareType,
+      </if>
+      <if test="creator != null" >
+        Creator,
+      </if>
+      <if test="createTime != null" >
+        CreateTime,
+      </if>
+      <if test="lastUpdator != null" >
+        LastUpdator,
+      </if>
+      <if test="updateTime != null" >
+        UpdateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExtType != null" >
+        #{fileExtType,jdbcType=VARCHAR},
+      </if>
+      <if test="mimeType != null" >
+        #{mimeType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=BIGINT},
+      </if>
+      <if test="fileTypeID != null" >
+        #{fileTypeID,jdbcType=INTEGER},
+      </if>
+      <if test="folderName != null" >
+        #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="shareType != null" >
+        #{shareType,jdbcType=CHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdator != null" >
+        #{lastUpdator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.SharedFile" >
+    update sharedfile
+    <set >
+      <if test="fileName != null" >
+        FileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExtType != null" >
+        FileExtType = #{fileExtType,jdbcType=VARCHAR},
+      </if>
+      <if test="mimeType != null" >
+        MimeType = #{mimeType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        FileSize = #{fileSize,jdbcType=BIGINT},
+      </if>
+      <if test="fileTypeID != null" >
+        FileTypeID = #{fileTypeID,jdbcType=INTEGER},
+      </if>
+      <if test="folderName != null" >
+        folderName = #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FilePath = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="shareType != null" >
+        ShareType = #{shareType,jdbcType=CHAR},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CreateTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdator != null" >
+        LastUpdator = #{lastUpdator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        UpdateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.SharedFile" >
+    update sharedfile
+    set FileName = #{fileName,jdbcType=VARCHAR},
+      FileExtType = #{fileExtType,jdbcType=VARCHAR},
+      MimeType = #{mimeType,jdbcType=VARCHAR},
+      FileSize = #{fileSize,jdbcType=BIGINT},
+      FileTypeID = #{fileTypeID,jdbcType=INTEGER},
+      folderName = #{folderName,jdbcType=VARCHAR},
+      FilePath = #{filePath,jdbcType=VARCHAR},
+      ShareType = #{shareType,jdbcType=CHAR},
+      Creator = #{creator,jdbcType=INTEGER},
+      CreateTime = #{createTime,jdbcType=TIMESTAMP},
+      LastUpdator = #{lastUpdator,jdbcType=INTEGER},
+      UpdateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </update>
+</mapper>

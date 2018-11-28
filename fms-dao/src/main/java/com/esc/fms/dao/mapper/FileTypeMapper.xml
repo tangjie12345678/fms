@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.FileTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.FileType" >
+    <id column="FileTypeID" property="fileTypeID" jdbcType="INTEGER" />
+    <result column="FileTypeName" property="fileTypeName" jdbcType="VARCHAR" />
+    <result column="FileTypeDesc" property="fileTypeDesc" jdbcType="VARCHAR" />
+    <result column="Enabled" property="enabled" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FileTypeID, FileTypeName, FileTypeDesc, Enabled
+  </sql>
+
+  <select id="getALLFileType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from filetype
+    where Enabled = TRUE
+    ORDER BY FileTypeID
+  </select>
+
+  <select id="getRecordCount" resultType="java.lang.Integer">
+    select count(*) from filetype where Enabled= true
+  </select>
+
+  <select id="getFileTypePageList" resultMap="BaseResultMap">
+    select * from filetype where Enabled= true
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from filetype
+    where FileTypeID = #{fileTypeID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from filetype
+    where FileTypeID = #{fileTypeID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.FileType" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fileTypeID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into filetype (FileTypeName, FileTypeDesc, Enabled
+      )
+    values (#{fileTypeName,jdbcType=VARCHAR}, #{fileTypeDesc,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.FileType" >
+    <selectKey resultType="java.lang.Integer" keyProperty="fileTypeID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into filetype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileTypeName != null" >
+        FileTypeName,
+      </if>
+      <if test="fileTypeDesc != null" >
+        FileTypeDesc,
+      </if>
+      <if test="enabled != null" >
+        Enabled,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileTypeName != null" >
+        #{fileTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileTypeDesc != null" >
+        #{fileTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.FileType" >
+    update filetype
+    <set >
+      <if test="fileTypeName != null" >
+        FileTypeName = #{fileTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileTypeDesc != null" >
+        FileTypeDesc = #{fileTypeDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        Enabled = #{enabled,jdbcType=BIT},
+      </if>
+    </set>
+    where FileTypeID = #{fileTypeID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.FileType" >
+    update filetype
+    set FileTypeName = #{fileTypeName,jdbcType=VARCHAR},
+      FileTypeDesc = #{fileTypeDesc,jdbcType=VARCHAR},
+      Enabled = #{enabled,jdbcType=BIT}
+    where FileTypeID = #{fileTypeID,jdbcType=INTEGER}
+  </update>
+
+  <update id="disableFileType" parameterType="java.lang.Integer" >
+    update filetype
+    set Enabled = FALSE
+    where FileTypeID = #{fileTypeID,jdbcType=INTEGER}
+  </update>
+</mapper>

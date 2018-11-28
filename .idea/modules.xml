@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FileManageSystem.iml" filepath="$PROJECT_DIR$/FileManageSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-common/fms-common.iml" filepath="$PROJECT_DIR$/fms-common/fms-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-dao/fms-dao.iml" filepath="$PROJECT_DIR$/fms-dao/fms-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-entity/fms-entity.iml" filepath="$PROJECT_DIR$/fms-entity/fms-entity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-gateway/fms-gateway.iml" filepath="$PROJECT_DIR$/fms-gateway/fms-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-service/fms-service.iml" filepath="$PROJECT_DIR$/fms-service/fms-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fms-web/fms-web.iml" filepath="$PROJECT_DIR$/fms-web/fms-web.iml" />
+    </modules>
+  </component>
+</project>

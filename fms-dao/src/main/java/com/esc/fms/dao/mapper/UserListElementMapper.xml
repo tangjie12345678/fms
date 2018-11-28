@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.UserListElementMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.UserListElement" >
+    <result column="UserID" property="userID" jdbcType="INTEGER" />
+    <result column="UserName" property="userName" jdbcType="VARCHAR" />
+    <result column="StaffRecordID" property="staffRecordID" jdbcType="INTEGER" />
+    <result column="StaffName" property="staffName" jdbcType="VARCHAR" />
+    <result column="Locked" property="locked" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.esc.fms.entity.UserListElement" >
+    insert into userlistelement (UserID, UserName, StaffRecordID, 
+      StaffName, Locked, Description
+      )
+    values (#{userID,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{staffRecordID,jdbcType=INTEGER}, 
+      #{staffName,jdbcType=VARCHAR}, #{locked,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <select id="getUserListByConditions" resultMap="BaseResultMap">
+    select * from (select u.UserID,u.UserName,u.StaffRecordID,s.StaffName,
+                    CASE when Locked = 0 then '否' else '是' end as Locked,u.Description
+                    from `user` u left JOIN staff s on u.StaffRecordID=s.StaffRecordID
+                    where u.Enabled = true
+                    <if test="userName != null and userName !=''" >
+                      and u.UserName like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+                    </if>
+                    order by UserID) us
+    <if test="staffName != null and staffName !=''" >
+      where us.StaffName like CONCAT('%',#{staffName,jdbcType=VARCHAR},'%')
+    </if>
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="getCountByConditions" resultType="java.lang.Integer">
+    select count(*) from (select s.StaffName
+                              from `user` u left JOIN staff s on u.StaffRecordID=s.StaffRecordID
+                              where u.Enabled = true
+                              <if test="userName != null and userName !=''" >
+                                and u.UserName like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+                              </if>
+                              ) us
+    <if test="staffName != null and staffName !=''" >
+      where us.StaffName like CONCAT('%',#{staffName,jdbcType=VARCHAR},'%')
+    </if>
+
+  </select>
+
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.UserListElement" >
+    insert into userlistelement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userID != null" >
+        UserID,
+      </if>
+      <if test="userName != null" >
+        UserName,
+      </if>
+      <if test="staffRecordID != null" >
+        StaffRecordID,
+      </if>
+      <if test="staffName != null" >
+        StaffName,
+      </if>
+      <if test="locked != null" >
+        Locked,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userID != null" >
+        #{userID,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffRecordID != null" >
+        #{staffRecordID,jdbcType=INTEGER},
+      </if>
+      <if test="staffName != null" >
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="locked != null" >
+        #{locked,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

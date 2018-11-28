@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.FileRefStaffMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.FileRefStaff" >
+    <id column="RecordID" property="recordID" jdbcType="BIGINT" />
+    <result column="FileID" property="fileID" jdbcType="INTEGER" />
+    <result column="DeptID" property="deptID" jdbcType="INTEGER" />
+    <result column="StaffID" property="staffID" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, FileID,DeptID, StaffID
+  </sql>
+
+
+
+  <select id="selectByFileID" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from filerefstaff
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from filerefstaff
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByFileID" parameterType="java.lang.Integer" >
+    delete from filerefstaff
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByFileIDandStaffID" >
+    delete from filerefstaff
+    where FileID = #{fileID,jdbcType=INTEGER}
+    and StaffID =  #{staffID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from filerefstaff
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.FileRefStaff" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into filerefstaff (FileID,DeptID,StaffID)
+    values (#{fileID,jdbcType=INTEGER}, #{deptID,jdbcType=INTEGER}, #{staffID,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.FileRefStaff" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into filerefstaff
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        FileID,
+      </if>
+      <if test="deptID != null" >
+        deptID,
+      </if>
+      <if test="staffID != null" >
+        StaffID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="deptID != null" >
+        #{deptID,jdbcType=INTEGER},
+      </if>
+      <if test="staffID != null" >
+        #{staffID,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.FileRefStaff" >
+    update filerefstaff
+    <set >
+      <if test="fileID != null" >
+        FileID = #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="deptID != null" >
+        DeptID = #{deptID,jdbcType=INTEGER},
+      </if>
+      <if test="staffID != null" >
+        StaffID = #{staffID,jdbcType=INTEGER},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.FileRefStaff" >
+    update filerefstaff
+    set FileID = #{fileID,jdbcType=INTEGER},
+      DeptID = #{deptID,jdbcType=INTEGER},
+      StaffID = #{staffID,jdbcType=INTEGER}
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+</mapper>

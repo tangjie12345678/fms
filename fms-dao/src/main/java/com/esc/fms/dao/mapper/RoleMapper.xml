@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.Role" >
+    <id column="RoleID" property="roleID" jdbcType="INTEGER" />
+    <result column="Role" property="role" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="Enabled" property="enabled" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RoleID, Role, Description, Enabled
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where RoleID = #{roleID,jdbcType=INTEGER}
+  </select>
+
+  <select id="getRoleList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from role
+    where Enabled = true
+    <if test="role != null and role !=''" >
+      and Role like CONCAT('%',#{role,jdbcType=VARCHAR},'%')
+    </if>
+    order by RoleID
+    limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="getAllRole" resultMap="BaseResultMap">
+    select RoleID,Role
+    from role
+    where Enabled=TRUE
+    order by RoleID
+  </select>
+
+  <delete id="disableRole" parameterType="java.lang.Integer" >
+    update role
+    set Enabled= FALSE
+    where RoleID =  #{roleID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role
+    where RoleID = #{roleID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.Role" >
+    <selectKey resultType="java.lang.Integer" keyProperty="roleID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into role (Role, Description, Enabled
+      )
+    values (#{role,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.Role" >
+    <selectKey resultType="java.lang.Integer" keyProperty="roleID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="role != null" >
+        Role,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+      <if test="enabled != null" >
+        Enabled,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.Role" >
+    update role
+    <set >
+      <if test="role != null" >
+        Role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        Enabled = #{enabled,jdbcType=BIT},
+      </if>
+    </set>
+    where RoleID = #{roleID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.Role" >
+    update role
+    set Role = #{role,jdbcType=VARCHAR},
+      Description = #{description,jdbcType=VARCHAR},
+      Enabled = #{enabled,jdbcType=BIT}
+    where RoleID = #{roleID,jdbcType=INTEGER}
+  </update>
+
+  <select id="getCountByConditions" resultType="java.lang.Integer">
+      select count(*)
+      from role
+      where Enabled=true
+      <if test="role != null and role !=''" >
+        and Role like CONCAT('%',#{role,jdbcType=VARCHAR},'%')
+      </if>
+  </select>
+
+</mapper>

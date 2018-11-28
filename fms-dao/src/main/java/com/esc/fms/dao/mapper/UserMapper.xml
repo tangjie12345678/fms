@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.User" >
+    <id column="UserID" property="userID" jdbcType="INTEGER" />
+    <result column="UserName" property="userName" jdbcType="VARCHAR" />
+    <result column="Password" property="password" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="StaffRecordID" property="staffRecordID" jdbcType="INTEGER" />
+    <result column="Locked" property="locked" jdbcType="BIT" />
+    <result column="Enabled" property="enabled" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UserID, UserName, Password, Description,StaffRecordID, Locked, Enabled
+  </sql>
+
+  <select id="authenticateUser" resultType="java.lang.Integer">
+    select count(*)
+    from user
+    where UserName = #{userName,jdbcType=VARCHAR} and Password = #{password,jdbcType=VARCHAR}
+  </select>
+
+  <update id="modifyPasswordByUserName">
+    update user
+    set Password =  #{password,jdbcType=VARCHAR}
+    where UserName = #{userName,jdbcType=VARCHAR}
+  </update>
+
+  <update id="disableUser" parameterType="java.lang.Integer" >
+    update user
+    set Enabled = FALSE
+    where UserID = #{userID,jdbcType=INTEGER}
+  </update>
+
+  <update id="disableRole" parameterType="java.lang.Integer" >
+    update user
+    set Enabled = FALSE
+    where UserID = #{userID,jdbcType=INTEGER}
+  </update>
+
+  <select id="getUserByUserName" resultMap="BaseResultMap" parameterType="string">
+    select
+    <include refid="Base_Column_List" />
+    from user where UserName = #{userName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getRolesByUserName" resultType="string" parameterType="string">
+  select r.Role
+  from `user` u,userrefrole ref,role r
+  where u.UserID = ref.UserID and ref.RoleID = r.RoleID
+  and u.UserName =  #{userName,jdbcType=VARCHAR}
+</select>
+
+  <select id="getPermissionsByUserName" resultType="string" parameterType="string">
+    select p.Permission
+    from `user` u,userrefrole urr,rolerefpermission rrp,permission p
+    where u.UserID = urr.UserID and urr.RoleID = rrp.RoleID and rrp.PermissionID =p.PermissionID
+    and u.UserName =  #{userName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where UserID = #{userID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where UserID = #{userID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user (UserName, Password, Description,StaffRecordID,Locked, Enabled)
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},  #{staffRecordID,jdbcType=INTEGER},
+      #{locked,jdbcType=BIT}, #{enabled,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        UserName,
+      </if>
+      <if test="password != null" >
+        Password,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+      <if test="staffRecordID != null" >
+        StaffRecordID,
+      </if>
+      <if test="locked != null" >
+        Locked,
+      </if>
+      <if test="enabled != null" >
+        Enabled,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="staffRecordID != null" >
+        #{staffRecordID,jdbcType=INTEGER},
+      </if>
+      <if test="locked != null" >
+        #{locked,jdbcType=BIT},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.User" >
+    update user
+    <set >
+      <if test="userName != null" >
+        UserName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        Password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="staffRecordID != null" >
+        StaffRecordID = #{staffRecordID,jdbcType=INTEGER},
+      </if>
+      <if test="locked != null" >
+        Locked = #{locked,jdbcType=BIT},
+      </if>
+      <if test="enabled != null" >
+        Enabled = #{enabled,jdbcType=BIT},
+      </if>
+    </set>
+    where UserID = #{userID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.User" >
+    update user
+    set UserName = #{userName,jdbcType=VARCHAR},
+      Password = #{password,jdbcType=VARCHAR},
+      Description = #{description,jdbcType=VARCHAR},
+      StaffRecordID = #{staffRecordID,jdbcType=INTEGER},
+      Locked = #{locked,jdbcType=BIT},
+      Enabled = #{enabled,jdbcType=BIT}
+    where UserID = #{userID,jdbcType=INTEGER}
+  </update>
+</mapper>

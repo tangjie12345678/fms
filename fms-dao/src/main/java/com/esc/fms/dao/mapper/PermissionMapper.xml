@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.Permission" >
+    <id column="PermissionID" property="permissionID" jdbcType="INTEGER" />
+    <result column="MenuCode" property="menuCode" jdbcType="VARCHAR" />
+    <result column="Permission" property="permission" jdbcType="VARCHAR" />
+    <result column="PermissionDesc" property="permissionDesc" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    PermissionID, MenuCode, Permission, PermissionDesc
+  </sql>
+
+  <select id="getPermissionsByUserName" resultType="java.lang.String" parameterType="java.lang.String">
+    select p.Permission
+    from user u,userrefrole urr,rolerefpermission rrp,permission p
+    where u.UserID=urr.UserID and urr.RoleID=rrp.RoleID
+    and rrp.PermissionID=p.PermissionID and u.Locked=FALSE
+    and u.Enabled=TRUE and u.UserName= #{userName,jdbcType=VARCHAR}
+    order by Permission;
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from permission
+    where PermissionID = #{permissionID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from permission
+    where PermissionID = #{permissionID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.Permission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="permissionID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into permission (MenuCode, Permission, PermissionDesc
+      )
+    values (#{menuCode,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, #{permissionDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.Permission" >
+    <selectKey resultType="java.lang.Integer" keyProperty="permissionID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuCode != null" >
+        MenuCode,
+      </if>
+      <if test="permission != null" >
+        Permission,
+      </if>
+      <if test="permissionDesc != null" >
+        PermissionDesc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuCode != null" >
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionDesc != null" >
+        #{permissionDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.Permission" >
+    update permission
+    <set >
+      <if test="menuCode != null" >
+        MenuCode = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        Permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionDesc != null" >
+        PermissionDesc = #{permissionDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PermissionID = #{permissionID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.Permission" >
+    update permission
+    set MenuCode = #{menuCode,jdbcType=VARCHAR},
+      Permission = #{permission,jdbcType=VARCHAR},
+      PermissionDesc = #{permissionDesc,jdbcType=VARCHAR}
+    where PermissionID = #{permissionID,jdbcType=INTEGER}
+  </update>
+</mapper>

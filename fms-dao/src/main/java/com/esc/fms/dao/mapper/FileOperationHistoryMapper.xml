@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.FileOperationHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.FileOperationHistory" >
+    <id column="RecordID" property="recordID" jdbcType="BIGINT" />
+    <result column="FileID" property="fileID" jdbcType="INTEGER" />
+    <result column="FileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="FileExtType" property="fileExtType" jdbcType="VARCHAR" />
+    <result column="FilePath" property="filePath" jdbcType="VARCHAR" />
+    <result column="FolderName" property="folderName" jdbcType="VARCHAR" />
+    <result column="FileOpType" property="fileOpType" jdbcType="CHAR" />
+    <result column="Creator" property="creator" jdbcType="INTEGER" />
+    <result column="CreatTime" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="Updator" property="updator" jdbcType="INTEGER" />
+    <result column="UpdateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, FileID, FileName, FileExtType, FilePath, FolderName, FileOpType, Creator, 
+    CreatTime, Updator, UpdateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from fileoperationhistory
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from fileoperationhistory
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.FileOperationHistory" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into fileoperationhistory (FileID, FileName, FileExtType, 
+      FilePath, FolderName, FileOpType, 
+      Creator, CreatTime, Updator, 
+      UpdateTime)
+    values (#{fileID,jdbcType=INTEGER}, #{fileName,jdbcType=VARCHAR}, #{fileExtType,jdbcType=VARCHAR}, 
+      #{filePath,jdbcType=VARCHAR}, #{folderName,jdbcType=VARCHAR}, #{fileOpType,jdbcType=CHAR}, 
+      #{creator,jdbcType=INTEGER}, #{creatTime,jdbcType=TIMESTAMP}, #{updator,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.FileOperationHistory" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into fileoperationhistory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        FileID,
+      </if>
+      <if test="fileName != null" >
+        FileName,
+      </if>
+      <if test="fileExtType != null" >
+        FileExtType,
+      </if>
+      <if test="filePath != null" >
+        FilePath,
+      </if>
+      <if test="folderName != null" >
+        FolderName,
+      </if>
+      <if test="fileOpType != null" >
+        FileOpType,
+      </if>
+      <if test="creator != null" >
+        Creator,
+      </if>
+      <if test="creatTime != null" >
+        CreatTime,
+      </if>
+      <if test="updator != null" >
+        Updator,
+      </if>
+      <if test="updateTime != null" >
+        UpdateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExtType != null" >
+        #{fileExtType,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="folderName != null" >
+        #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileOpType != null" >
+        #{fileOpType,jdbcType=CHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.FileOperationHistory" >
+    update fileoperationhistory
+    <set >
+      <if test="fileID != null" >
+        FileID = #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null" >
+        FileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileExtType != null" >
+        FileExtType = #{fileExtType,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FilePath = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="folderName != null" >
+        FolderName = #{folderName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileOpType != null" >
+        FileOpType = #{fileOpType,jdbcType=CHAR},
+      </if>
+      <if test="creator != null" >
+        Creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        CreatTime = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updator != null" >
+        Updator = #{updator,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        UpdateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.FileOperationHistory" >
+    update fileoperationhistory
+    set FileID = #{fileID,jdbcType=INTEGER},
+      FileName = #{fileName,jdbcType=VARCHAR},
+      FileExtType = #{fileExtType,jdbcType=VARCHAR},
+      FilePath = #{filePath,jdbcType=VARCHAR},
+      FolderName = #{folderName,jdbcType=VARCHAR},
+      FileOpType = #{fileOpType,jdbcType=CHAR},
+      Creator = #{creator,jdbcType=INTEGER},
+      CreatTime = #{creatTime,jdbcType=TIMESTAMP},
+      Updator = #{updator,jdbcType=INTEGER},
+      UpdateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+</mapper>

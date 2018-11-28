@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="fms-common" />
+        <module name="fms-dao" />
+        <module name="fms-entity" />
+        <module name="fms-gateway" />
+        <module name="fms-service" />
+        <module name="fms-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="FileManageSystem" target="1.5" />
+      <module name="fms-common" target="1.5" />
+      <module name="fms-dao" target="1.5" />
+      <module name="fms-entity" target="1.5" />
+      <module name="fms-gateway" target="1.5" />
+      <module name="fms-parent" target="1.5" />
+      <module name="fms-service" target="1.5" />
+      <module name="fms-web" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

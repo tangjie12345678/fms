@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.SysMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.SysMenu" >
+    <id column="RecordID" property="recordID" jdbcType="INTEGER" />
+    <result column="MenuID" property="menuID" jdbcType="INTEGER" />
+    <result column="ParentID" property="parentID" jdbcType="INTEGER" />
+    <result column="MenuCode" property="menuCode" jdbcType="VARCHAR" />
+    <result column="MenuName" property="menuName" jdbcType="VARCHAR" />
+    <result column="Href" property="href" jdbcType="VARCHAR" />
+    <result column="Icon" property="icon" jdbcType="VARCHAR" />
+    <result column="MainSort" property="mainSort" jdbcType="TINYINT" />
+    <result column="SubSort" property="subSort" jdbcType="TINYINT" />
+    <result column="isEnabled" property="isEnabled" jdbcType="BIT" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, MenuID, ParentID, MenuCode, MenuName, Href, Icon, MainSort, SubSort, isEnabled, 
+    Description
+  </sql>
+
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="string" >
+    select sm.*
+    from (select DISTINCT MenuCode
+                from user u, userrefrole urr,rolerefpermission rrp,permission p
+                where u.UserID=urr.UserID and urr.RoleID=rrp.RoleID
+                and rrp.PermissionID= p.PermissionID and u.UserName = #{userName,jdbcType=VARCHAR}) t, sysmenu sm
+    where t.MenuCode = sm.MenuCode
+    order by MainSort,SubSort;
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sysmenu
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sysmenu
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.SysMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sysmenu (MenuID, ParentID, MenuCode, 
+      MenuName, Href, Icon, 
+      MainSort, SubSort, isEnabled, 
+      Description)
+    values (#{menuID,jdbcType=INTEGER}, #{parentID,jdbcType=INTEGER}, #{menuCode,jdbcType=VARCHAR}, 
+      #{menuName,jdbcType=VARCHAR}, #{href,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{mainSort,jdbcType=TINYINT}, #{subSort,jdbcType=TINYINT}, #{isEnabled,jdbcType=BIT}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.SysMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sysmenu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuID != null" >
+        MenuID,
+      </if>
+      <if test="parentID != null" >
+        ParentID,
+      </if>
+      <if test="menuCode != null" >
+        MenuCode,
+      </if>
+      <if test="menuName != null" >
+        MenuName,
+      </if>
+      <if test="href != null" >
+        Href,
+      </if>
+      <if test="icon != null" >
+        Icon,
+      </if>
+      <if test="mainSort != null" >
+        MainSort,
+      </if>
+      <if test="subSort != null" >
+        SubSort,
+      </if>
+      <if test="isEnabled != null" >
+        isEnabled,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuID != null" >
+        #{menuID,jdbcType=INTEGER},
+      </if>
+      <if test="parentID != null" >
+        #{parentID,jdbcType=INTEGER},
+      </if>
+      <if test="menuCode != null" >
+        #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="href != null" >
+        #{href,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="mainSort != null" >
+        #{mainSort,jdbcType=TINYINT},
+      </if>
+      <if test="subSort != null" >
+        #{subSort,jdbcType=TINYINT},
+      </if>
+      <if test="isEnabled != null" >
+        #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.SysMenu" >
+    update sysmenu
+    <set >
+      <if test="menuID != null" >
+        MenuID = #{menuID,jdbcType=INTEGER},
+      </if>
+      <if test="parentID != null" >
+        ParentID = #{parentID,jdbcType=INTEGER},
+      </if>
+      <if test="menuCode != null" >
+        MenuCode = #{menuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null" >
+        MenuName = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="href != null" >
+        Href = #{href,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null" >
+        Icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="mainSort != null" >
+        MainSort = #{mainSort,jdbcType=TINYINT},
+      </if>
+      <if test="subSort != null" >
+        SubSort = #{subSort,jdbcType=TINYINT},
+      </if>
+      <if test="isEnabled != null" >
+        isEnabled = #{isEnabled,jdbcType=BIT},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.SysMenu" >
+    update sysmenu
+    set MenuID = #{menuID,jdbcType=INTEGER},
+      ParentID = #{parentID,jdbcType=INTEGER},
+      MenuCode = #{menuCode,jdbcType=VARCHAR},
+      MenuName = #{menuName,jdbcType=VARCHAR},
+      Href = #{href,jdbcType=VARCHAR},
+      Icon = #{icon,jdbcType=VARCHAR},
+      MainSort = #{mainSort,jdbcType=TINYINT},
+      SubSort = #{subSort,jdbcType=TINYINT},
+      isEnabled = #{isEnabled,jdbcType=BIT},
+      Description = #{description,jdbcType=VARCHAR}
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+</mapper>

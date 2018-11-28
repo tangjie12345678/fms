@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.StaffListElementMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.StaffListElement" >
+    <id column="StaffRecordID" property="staffRecordID" jdbcType="INTEGER" />
+    <result column="StaffID" property="staffID" jdbcType="VARCHAR" />
+    <result column="StaffName" property="staffName" jdbcType="VARCHAR" />
+    <result column="Sex" property="sex" jdbcType="CHAR" />
+    <result column="Age" property="age" jdbcType="TINYINT" />
+    <result column="DeptName" property="deptName" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="Mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectStaffByConditions" resultMap="BaseResultMap">
+      select s.StaffRecordID,StaffID,StaffName,d.Description as Sex,TIMESTAMPDIFF(YEAR,Birthday,now()) as Age,dept.DeptName,Telephone,Mobilephone,Address
+      from staff s,dictionary d,deptrefstaff drs,department dept
+      where s.Sex=d.DictCode and s.StaffRecordID = drs.StaffRecordID and drs.DeptID = dept.DeptID and s.Avail = true
+      <if test="staffID != null and staffID !=''" >
+         and s.StaffID like CONCAT('%',#{staffID,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="staffName != null and staffName !=''" >
+        and s.StaffName like CONCAT('%',#{staffName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="sex != null  and sex !=''" >
+        and s.Sex = #{sex,jdbcType=VARCHAR}
+      </if>
+      order by StaffRecordID
+      limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="getCountByConditions" resultType="java.lang.Integer">
+      select count(*)
+      from staff s
+      where Avail = true
+      <if test="staffID != null and staffID !=''" >
+        and s.StaffID like CONCAT('%',#{staffID,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="staffName != null and staffName !=''" >
+        and s.StaffName like CONCAT('%',#{staffName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="sex != null  and sex !=''" >
+        and s.Sex = #{sex,jdbcType=VARCHAR}
+      </if>
+  </select>
+
+
+
+</mapper>

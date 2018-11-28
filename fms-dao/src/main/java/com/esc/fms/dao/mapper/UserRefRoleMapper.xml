@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.UserRefRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.UserRefRole" >
+    <id column="RecordID" property="recordID" jdbcType="INTEGER" />
+    <result column="UserID" property="userID" jdbcType="INTEGER" />
+    <result column="RoleID" property="roleID" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, UserID, RoleID
+  </sql>
+
+  <select id="selectByUserID" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from userrefrole
+    where UserID = #{userID,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByUserIDRoleID" >
+    delete from userrefrole
+    where UserID = #{userID,jdbcType=INTEGER} and RoleID = #{roleID,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userrefrole
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from userrefrole
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.UserRefRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into userrefrole (UserID, RoleID)
+    values (#{userID,jdbcType=INTEGER}, #{roleID,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.UserRefRole" >
+    <selectKey resultType="java.lang.Integer" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into userrefrole
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userID != null" >
+        UserID,
+      </if>
+      <if test="roleID != null" >
+        RoleID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userID != null" >
+        #{userID,jdbcType=INTEGER},
+      </if>
+      <if test="roleID != null" >
+        #{roleID,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.UserRefRole" >
+    update userrefrole
+    <set >
+      <if test="userID != null" >
+        UserID = #{userID,jdbcType=INTEGER},
+      </if>
+      <if test="roleID != null" >
+        RoleID = #{roleID,jdbcType=INTEGER},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.UserRefRole" >
+    update userrefrole
+    set UserID = #{userID,jdbcType=INTEGER},
+      RoleID = #{roleID,jdbcType=INTEGER}
+    where RecordID = #{recordID,jdbcType=INTEGER}
+  </update>
+</mapper>

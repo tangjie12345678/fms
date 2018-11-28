@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.FileOperateRightMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.FileOperateRight" >
+    <id column="RecordID" property="recordID" jdbcType="BIGINT" />
+    <result column="FileID" property="fileID" jdbcType="INTEGER" />
+    <result column="OpRight" property="opRight" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RecordID, FileID, OpRight
+  </sql>
+
+
+  <select id="selectByFileID" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from fileoperateright
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByFileIDandOpRight" >
+    delete from fileoperateright
+    where FileID = #{fileID,jdbcType=INTEGER}
+    and OpRight = #{opRight,jdbcType=CHAR}
+  </delete>
+
+  <delete id="deleteByFileID" >
+    delete from fileoperateright
+    where FileID = #{fileID,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from fileoperateright
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from fileoperateright
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.esc.fms.entity.FileOperateRight" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into fileoperateright (FileID, OpRight)
+    values (#{fileID,jdbcType=INTEGER}, #{opRight,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.FileOperateRight" >
+    <selectKey resultType="java.lang.Long" keyProperty="recordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into fileoperateright
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        FileID,
+      </if>
+      <if test="opRight != null" >
+        OpRight,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileID != null" >
+        #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="opRight != null" >
+        #{opRight,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.FileOperateRight" >
+    update fileoperateright
+    <set >
+      <if test="fileID != null" >
+        FileID = #{fileID,jdbcType=INTEGER},
+      </if>
+      <if test="opRight != null" >
+        OpRight = #{opRight,jdbcType=CHAR},
+      </if>
+    </set>
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.FileOperateRight" >
+    update fileoperateright
+    set FileID = #{fileID,jdbcType=INTEGER},
+      OpRight = #{opRight,jdbcType=CHAR}
+    where RecordID = #{recordID,jdbcType=BIGINT}
+  </update>
+</mapper>

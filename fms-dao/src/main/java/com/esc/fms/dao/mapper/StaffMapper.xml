@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.esc.fms.dao.StaffMapper" >
+  <resultMap id="BaseResultMap" type="com.esc.fms.entity.Staff" >
+    <id column="StaffRecordID" property="staffRecordID" jdbcType="INTEGER" />
+    <result column="StaffID" property="staffID" jdbcType="VARCHAR" />
+    <result column="StaffName" property="staffName" jdbcType="VARCHAR" />
+    <result column="Birthday" property="birthday" jdbcType="DATE" />
+    <result column="Sex" property="sex" jdbcType="CHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="Mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+    <result column="Address" property="address" jdbcType="VARCHAR" />
+    <result column="NativePlace" property="nativePlace" jdbcType="VARCHAR" />
+    <result column="Degree" property="degree" jdbcType="CHAR" />
+    <result column="College" property="college" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="Avail" property="avail" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    StaffRecordID, StaffID, StaffName, Birthday, Sex, Telephone, Mobilephone, Address, 
+    NativePlace, Degree, College, Description,Avail
+  </sql>
+
+  <select id="selectByDeptID" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+      select s.*
+      from deptrefstaff drs, staff s
+      where drs.DeptID = #{deptID,jdbcType=INTEGER} and drs.StaffRecordID = s.StaffRecordID and s.Avail = TRUE
+      order by StaffID;
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from staff
+    where StaffRecordID = #{staffRecordID,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectForDropdownList" resultMap="BaseResultMap" parameterType="java.lang.String"  >
+    select StaffRecordID,StaffID,StaffName
+    from staff
+    where Avail = TRUE
+    <if test="staffName != null" >
+      and StaffName like CONCAT('%',#{staffName,jdbcType=VARCHAR},'%')
+    </if>
+    order by StaffRecordID;
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from staff
+    where StaffRecordID = #{staffRecordID,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteStaff" parameterType="java.lang.Integer" >
+    update staff
+    set Avail = 0
+    where StaffRecordID = #{staffRecordID,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.esc.fms.entity.Staff" >
+    <selectKey resultType="java.lang.Integer" keyProperty="staffRecordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into staff (StaffID, StaffName, Birthday, 
+      Sex, Telephone, Mobilephone, 
+      Address, NativePlace, Degree, 
+      College, Description,Avail)
+    values (#{staffID,jdbcType=VARCHAR}, #{staffName,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+      #{sex,jdbcType=CHAR}, #{telephone,jdbcType=VARCHAR}, #{mobilephone,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, #{degree,jdbcType=CHAR}, 
+      #{college,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},#{avail,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.esc.fms.entity.Staff" >
+    <selectKey resultType="java.lang.Integer" keyProperty="staffRecordID" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into staff
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="staffID != null" >
+        StaffID,
+      </if>
+      <if test="staffName != null" >
+        StaffName,
+      </if>
+      <if test="birthday != null" >
+        Birthday,
+      </if>
+      <if test="sex != null" >
+        Sex,
+      </if>
+      <if test="telephone != null" >
+        Telephone,
+      </if>
+      <if test="mobilephone != null" >
+        Mobilephone,
+      </if>
+      <if test="address != null" >
+        Address,
+      </if>
+      <if test="nativePlace != null" >
+        NativePlace,
+      </if>
+      <if test="degree != null" >
+        Degree,
+      </if>
+      <if test="college != null" >
+        College,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="staffID != null" >
+        #{staffID,jdbcType=VARCHAR},
+      </if>
+      <if test="staffName != null" >
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null" >
+        #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        #{degree,jdbcType=CHAR},
+      </if>
+      <if test="college != null" >
+        #{college,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.esc.fms.entity.Staff" >
+    update staff
+    <set >
+      <if test="staffID != null" >
+        StaffID = #{staffID,jdbcType=VARCHAR},
+      </if>
+      <if test="staffName != null" >
+        StaffName = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        Birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="sex != null" >
+        Sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="telephone != null" >
+        Telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilephone != null" >
+        Mobilephone = #{mobilephone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        Address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        NativePlace = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        Degree = #{degree,jdbcType=CHAR},
+      </if>
+      <if test="college != null" >
+        College = #{college,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where StaffRecordID = #{staffRecordID,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.esc.fms.entity.Staff" >
+    update staff
+    set StaffID = #{staffID,jdbcType=VARCHAR},
+      StaffName = #{staffName,jdbcType=VARCHAR},
+      Birthday = #{birthday,jdbcType=DATE},
+      Sex = #{sex,jdbcType=CHAR},
+      Telephone = #{telephone,jdbcType=VARCHAR},
+      Mobilephone = #{mobilephone,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      NativePlace = #{nativePlace,jdbcType=VARCHAR},
+      Degree = #{degree,jdbcType=CHAR},
+      College = #{college,jdbcType=VARCHAR},
+      Description = #{description,jdbcType=VARCHAR},
+      Avail = #{avail,jdbcType=BIT}
+    where StaffRecordID = #{staffRecordID,jdbcType=INTEGER}
+  </update>
+</mapper>
